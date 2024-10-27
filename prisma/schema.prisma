@@ -14,9 +14,169 @@ datasource db {
 }
 
 model User {
-  id    Int    @id @default(autoincrement())
-  name  String
-  email String @unique
+  id             String          @id @default(cuid())
+  name           String
+  email          String          @unique
+  password       String
+  isVerified     Boolean         @default(false)
+  isSeller       Boolean         @default(false)
+  isLabour       Boolean         @default(false)
+  role           Role            @default(USER)
+  blogs          Blog[]
+  communityPosts CommunityPost[]
+  answers        Answer[]
+  products       Product[]
+  labour         Labour?
+  managements    Management[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 
   @@map("users")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model Blog {
+  id          String   @id @default(cuid())
+  blogTitle   String
+  blogContent String
+  blogImage   String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("blogs")
+}
+
+model Disease {
+  id                 String   @id @default(cuid())
+  diseaseName        String
+  diseaseDescription String
+  diseaseImage       String
+  cure               String
+  prevention         String
+  isPending          Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@map("diseases")
+}
+
+model CommunityPost {
+  id              String   @id @default(cuid())
+  postTitle       String
+  postDescription String
+  upvotes         Int      @default(0)
+  downvotes       Int      @default(0)
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers         Answer[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("community_posts")
+}
+
+model Answer {
+  id              String        @id @default(cuid())
+  answerContent   String
+  upvotes         Int           @default(0)
+  downvotes       Int           @default(0)
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  communityPostId String
+  communityPost   CommunityPost @relation(fields: [communityPostId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@map("answers")
+}
+
+enum ProductType {
+  CROP
+  FERTILIZER
+  UTILS
+  SEED
+}
+
+model Product {
+  id                 String      @id @default(cuid())
+  productName        String
+  productType        ProductType
+  productDescription String
+  productImage       String
+  productPrice       Int
+  productRating      Float       @default(0.00)
+  totalSold          Int         @default(0)
+  productRemaining   Int
+  user               User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  @@map("products")
+}
+
+model JobPost {
+  id             String   @id @default(cuid())
+  jobTitle       String
+  jobDescription String
+  labourCount    Int
+  applyCount     Int
+  location       String
+  wage           Int
+  workHours      Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  labours        Labour[]
+
+  @@map("job_posts")
+}
+
+enum LabourType {
+  FIELD_LABOUR
+  LIVESTOCK_WORKER
+  EQUIPMENT_OPERATOR
+  IRRIGATION_TECHNICIAN
+  HARVEST_WORKER
+  SUPERVISOR
+  FARM_GUARD
+}
+
+model Labour {
+  id         String     @id @default(cuid())
+  location   String
+  wageDemand Int
+  labourType LabourType
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String     @unique
+  jobs       JobPost[]
+
+  @@map("labors")
+}
+
+model Management {
+  id                 String   @id @default(cuid())
+  cropTitle          String
+  plantingDate       DateTime
+  expectedHarvDate   DateTime
+  irrigationInterval Int
+  lastIrrigation     DateTime
+  lastPesticide      DateTime
+  waterAmount        Int
+  pesticidesUsed     String
+  disease            String
+  actionTaken        Boolean
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String
+
+  @@map("managements")
 }
