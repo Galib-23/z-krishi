@@ -1,8 +1,8 @@
 
 export default function Home() {
   return (
-    <div>
-      Hello world
+    <div className="min-h-screen bg-green-400">
+      
     </div>
   );
 }
