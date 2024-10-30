@@ -3,7 +3,7 @@ import NextAuth, { AuthError } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { db } from "./lib/db";
-import bcrypt from 'bcryptjs';
+//import bcrypt from 'bcryptjs';
 import authConfig from "./auth.config";
 
 export class CustomAuthError extends AuthError{

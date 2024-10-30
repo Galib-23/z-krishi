@@ -13,9 +13,9 @@ export const logout = async () => {
   revalidatePath("/")
 }
 
-export const loginWithCredentials = async (data) => {
-  // get username pass from data
-  // chech for existing user using prisma
-  // trycatch
-  // signIn("credentials", data)
-}
+// export const loginWithCredentials = async (data) => {
+//   // get username pass from data
+//   // chech for existing user using prisma
+//   // trycatch
+//   // signIn("credentials", data)
+// }

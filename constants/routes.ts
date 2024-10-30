@@ -8,6 +8,8 @@ export const PUBLIC_ROUTES = [
   '/login',
   '/register',
   '/products',
+  '/api/login',
+  '/api/register',
   '/api/auth'
 ]
 
